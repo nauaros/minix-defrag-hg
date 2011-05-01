@@ -38,7 +38,7 @@ PUBLIC int do_nfrags()
   if (vp->v_ref_count != 1) return(EISINUSE);
 
   /* Request the mfs server to perform the call. */
-  return(req_frags(vp->v_fs_e, vp->v_inode_nr, NO_DEFRAG));
+  return(req_frags(vp->v_fs_e, vp->v_inode_nr, FALSE));
 }
 
 /*===========================================================================*
@@ -49,5 +49,5 @@ PUBLIC int do_defrag()
 {
   int r;
 
-  /* r = req_frags(vp->v_fs_e, vp->v_inode_nr, DO_DEFRAG); */
+  /* r = req_frags(vp->v_fs_e, vp->v_inode_nr, TRUE); */
 }

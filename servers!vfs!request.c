@@ -33,11 +33,10 @@ FORWARD _PROTOTYPE(int fs_sendrec_f, (char *file, int line, endpoint_t fs_e,
  *			req_frags					     *
  *===========================================================================*/
 
-PUBLIC int req_frags(
-  endpoint_t fs_e,
-  ino_t inode_nr,
-  int defrag_flag
-)
+PUBLIC int req_frags(fs_e, inode_nr, defrag_flag)
+  endpoint_t fs_e;		/* fs process endpoints from vnode */
+  ino_t inode_nr;		/* inode_nr from vnode */
+  int defrag_flag;		/* TRUE or FALSE */
 {
   int r;
   message m;
@@ -45,6 +44,7 @@ PUBLIC int req_frags(
   /* Fill message and send request. */
   m.m_type = REQ_FRAGS;
   m.REQ_INODE_NR = inode_nr;
+  m.REQ_DEFRAG_FLAG = defrag_flag;
   return(fs_sendrec(fs_e, &m));
 }
 
