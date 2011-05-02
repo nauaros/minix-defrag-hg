@@ -31,7 +31,7 @@ PUBLIC int do_nfrags()
   /* Check for file type. */
   if (!(vp->v_mode & I_REGULAR)) {
   	if	(vp->v_mode & I_DIRECTORY)	return(EISDIR);
-  	else if	(vp->v_mode & I_BLOCK_SPEACIAL)	return(EISSPECIAL);
+  	else if	(vp->v_mode & I_BLOCK_SPECIAL)	return(EISSPECIAL);
   }
 
   /* Check to see if file is used somewhere else. */
