@@ -1,5 +1,5 @@
 #include <lib.h>
-#define nfrags	_nfrags
+#define defrag _defrag
 #include <defrag.h>
 
 PUBLIC int defrag(file)
