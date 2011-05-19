@@ -144,7 +144,7 @@ iter:
 	k = (bitchunk_t) conv2(sp->s_native, (int) *wptr);
 
 	n -= i ;
-	i = BITCHUNK_BITS;
+	i = FS_BITCHUNK_BITS;
   }
 
   /* Allocate bits in the first chunk. */

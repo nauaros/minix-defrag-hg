@@ -3,23 +3,25 @@ RANDOMIZE := echo abcedfghijklmnopqrstuvwxyz > /dev/urandom
 all:
 	@echo "run all tests"
 
-.PHONY: all nfrags fsck clean mrproper wipe files
+.PHONY: all nfrags defrag fsck clean mrproper wipe files
 
 # After execution of this script, the file layout will be:
 # file6     file2  file6  file4  file5  file6
 # ---- ---- | ---- | ---- | ---- | ---- | ----
 # (where "----" is a block and the default 1 block/zone is assumed)
-nfrags: test_prog mntflag files
+nfrags: prog_test files
+	./prog_test 1
 
-	./test_prog 1
+defrag: prog_test files
+	./prog_test 2
 
-test_prog : test.c
+prog_test : test.c
 	$(CC) -o $@ $?
 
 # Echoing into /dev/urandom is needed to prevent read errors. Excuse the fact
 # that there are so much of them, but any less wouldn't cut it. What a bloody
 # mess.
-files:
+files: mntflag
 	@$(RANDOMIZE)
 	@$(RANDOMIZE)
 	@$(RANDOMIZE)

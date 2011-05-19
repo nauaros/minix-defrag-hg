@@ -15,28 +15,13 @@ int main(int argv, char const * args[])
     case 1:
         nf = nfrags("/mnt/disk/file6");
         printf("nfrags returned: %d\n", nf);
-        if (nf == -1) {
-            printf("nfrags KO\n");
-            switch(errno) {
-            case EISDIR:       printf("EISDIR\n");       break;
-            case EFTYPE:       printf("EFTYPE\n");       break;
-            case EBUSY:        printf("EBUSY\n");        break;
-
-            /* returned by fetch_name */
-            case ENAMETOOLONG: printf("ENAMETOOLONG\n"); break;
-            case EINVAL:       printf("EINVAL\n");       break;
-
-            /* returned by eat_path */
-            case ENOENT:       printf("ENOENT\n");       break;
-            case ELOOP:        printf("ELOOP\n");        break;
-            case E2BIG:        printf("E2BIG\n");        break;
-            }
-        }
-        else if (nf == 3) {
-            printf("nfrags OK\n");
-        } else  {
-            printf("unexpected return value\n");
-        }
+        if (nf == -1) printf("errno: %d\n", errno);
+        break;
+    case 2:
+        nf = defrag("/mnt/disk/file6");
+        printf("defrag returned %d\n", nf);
+        if (nf == -1) printf("errno: %d\n", errno);
+        break;
     }
     return EXIT_SUCCESS;
 }

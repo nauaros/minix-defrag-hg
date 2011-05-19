@@ -276,9 +276,9 @@ int block_type;			/* INODE_BLOCK, DIRECTORY_BLOCK, or whatever */
 /*===========================================================================*
  *				alloc_n_zones				     *
  *===========================================================================*/
-PUBLIC zone_t alloc_n_zones(dev, n)
-dev_t dev;			/* device where zone wanted */
-int n;				/* number of zones to allocate */
+PUBLIC zone_t alloc_n_zones(dev_t dev, int n)
+/*dev_t dev;			device where zone wanted	*/
+/*int n;			number of zones to allocate	*/
 {
 /* Allocate n new contiguous zones zone on the indicated device and return the
  * number of the first allocated zone. */
@@ -288,7 +288,7 @@ int n;				/* number of zones to allocate */
   struct super_block *sp;
 
   sp = get_super(dev);
-  b = alloc_bit(sp, ZMAP, sp->s_zsearch, n);
+  b = alloc_n_bits(sp, ZMAP, sp->s_zsearch, n);
   if (b == NO_BIT) {
 	err_code = ENOSPC;
 	major = (int) (sp->s_dev >> MAJOR) & BYTE;
