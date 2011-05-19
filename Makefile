@@ -1,7 +1,9 @@
+RANDOMIZE := echo abcedfghijklmnopqrstuvwxyz > /dev/urandom
+
 all:
 	@echo "run all tests"
 
-.PHONY: all nfrags fsck clean mrproper wipe
+.PHONY: all nfrags fsck clean mrproper wipe files
 
 # After execution of this script, the file layout will be:
 # file6     file2  file6  file4  file5  file6
@@ -14,13 +16,25 @@ nfrags: test_prog mntflag files
 test_prog : test.c
 	$(CC) -o $@ $?
 
+# Echoing into /dev/urandom is needed to prevent read errors. Excuse the fact
+# that there are so much of them, but any less wouldn't cut it. What a bloody
+# mess.
 files:
+	@$(RANDOMIZE)
+	@$(RANDOMIZE)
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file1 bs=4096 count=2
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file2 bs=4096 count=1
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file3 bs=4096 count=1
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file4 bs=4096 count=1
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file5 bs=4096 count=1
+	@$(RANDOMIZE)
 	@rm /mnt/disk/file1 /mnt/disk/file3
+	@$(RANDOMIZE)
 	@dd if=/dev/urandom of=/mnt/disk/file6 bs=4096 count=4
 	@sleep 2
 

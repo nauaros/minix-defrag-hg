@@ -7,6 +7,7 @@
  */
 
 #include "fs.h"
+#include <minix/vfsif.h>
 #include "param.h"
 #include "vnode.h"
 
@@ -17,8 +18,8 @@
 PUBLIC int do_nfrags()
 {
   int r;
-  unsigned int nfrags;
   struct vnode *vp;
+  mode_t mode;
 
   /* Put the file name in user_fullpath. */
   r = fetch_name(m_in.name, m_in.name_length, M3);
@@ -30,15 +31,20 @@ PUBLIC int do_nfrags()
 
   /* Check for file type. */
   if (!(vp->v_mode & I_REGULAR)) {
-  	if	(vp->v_mode & I_DIRECTORY)	return(EISDIR);
-  	else if	(vp->v_mode & I_BLOCK_SPECIAL)	return(EISSPECIAL);
+	mode = vp->v_mode;
+	put_vnode(vp);
+  	if	(mode & I_DIRECTORY)	return(EISDIR);
+  	else if	(mode & I_BLOCK_SPECIAL)return(EFTYPE);
   }
 
   /* Check to see if file is used somewhere else. */
-  if (vp->v_ref_count != 1) return(EISINUSE);
+  if (vp->v_ref_count != 1) return(EBUSY);
 
-  /* Request the mfs server to perform the call. */
-  return(req_frags(vp->v_fs_e, vp->v_inode_nr, FALSE));
+  /* Request the fs server to perform the call. */
+  int r = req_frags(vp->v_fs_e, vp->v_inode_nr, FALSE);
+
+  put_vnode(vp);
+  return(r);
 }
 
 /*===========================================================================*
@@ -48,6 +54,6 @@ PUBLIC int do_nfrags()
 PUBLIC int do_defrag()
 {
   int r;
-
+  return 43;
   /* r = req_frags(vp->v_fs_e, vp->v_inode_nr, TRUE); */
 }
