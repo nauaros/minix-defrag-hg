@@ -12,6 +12,7 @@ struct super_block;
 
 /* cache.c */
 _PROTOTYPE( zone_t alloc_zone, (dev_t dev, zone_t z)			);
+_PROTOTYPE( zone_t alloc_n_zones, (dev_t dev, int n)			);
 _PROTOTYPE( void buf_pool, (int bufs)					);
 _PROTOTYPE( void flushall, (dev_t dev)					);
 _PROTOTYPE( void free_zone, (dev_t dev, zone_t numb)			);
@@ -98,6 +99,8 @@ _PROTOTYPE( int fs_statvfs, (void)					);
 
 /* super.c */
 _PROTOTYPE( bit_t alloc_bit, (struct super_block *sp, int map, bit_t origin));
+_PROTOTYPE( bit_t alloc_n_bits, (struct super_block *sp, int map,
+				bit_t origin, int n)			);
 _PROTOTYPE( void free_bit, (struct super_block *sp, int map,
 						bit_t bit_returned)	);
 _PROTOTYPE( unsigned int get_block_size, (dev_t dev)				);

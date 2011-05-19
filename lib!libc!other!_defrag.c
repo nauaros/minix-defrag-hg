@@ -7,5 +7,5 @@ PUBLIC int defrag(file)
 {
   message m;
   _loadname(file, &m);
-  return(_syscall(VFS_PROC_NR, NFRAGS, &m));
+  return(_syscall(VFS_PROC_NR, DEFRAG, &m));
 }
