@@ -3,6 +3,8 @@
  */
 
 #include "fs.h"
+#include "inode.h"
+#include "super.h"
 
 /*===========================================================================*
  *				fs_frags				     *
@@ -11,25 +13,28 @@
 PUBLIC int fs_frags(void)
 {
   struct inode *ip;
+  struct super_block *sp;
   int scale, blk_in_zone, zone_size, nfrags;
-  offset_t off;
+  off_t off;
   block_t expected;
+  zone_t dest;
+  int n;
 
   /* Find the inode corresponding to the passed vnode. */
   ip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR);
   if (ip == NULL) return(EINVAL);
 
-  scale = ip->i_sp->s_log_zone_size;	/* for block-zone conversion */
+  sp = ip->i_sp;
+  scale = sp->s_log_zone_size;	/* for block-zone conversion */
   blk_in_zone = 1 << scale;		/* # blocks/zone */
-  zone_size = ip->i_sp->block_size << scale;	/* zone size in byte */
+  zone_size = sp->s_block_size << scale;	/* zone size in byte */
   nfrags = 1;					/* # fragments */
 
-  /* sizeof block_t ? */
   /* Expected block for next offset if next zone is contiguous. */
-  if (ip->sp->s_version == V1)
-  	expected = (block_t) conv2(sp->s_native, (int)  ip->izone[0] << scale);
+  if (sp->s_version == V1)
+  	expected = (block_t) conv2(sp->s_native, (int)  ip->i_zone[0] << scale);
   else
-  	expected = (block_t) conv4(sp->s_native, (long) ip->izone[0] << scale);
+  	expected = (block_t) conv4(sp->s_native, (long) ip->i_zone[0] << scale);
 
   /* Jump from zone to zone and increment nfrags when there is a
      discontinuity. */
@@ -37,10 +42,17 @@ PUBLIC int fs_frags(void)
   	expected += blk_in_zone;
   	if (read_map(ip, off) != expected) nfrags++;
   }
+  fs_m_out.RES_NFRAGS = nfrags;
 
-  if (nfrags != 1 && fs_m_in.REQ_DEFRAG_FLAG) {
-  	/* DO DEFRAG */
-  }
+  /* Don't defrag. */
+  if (nfrags == 1 || !fs_m_in.REQ_DEFRAG_FLAG) return(OK);
 
-  return(nfrags); /* to modify */
+  blk = ip->i_size + sp->s_block_size - 1) / sp->s_block_size;
+  n = blk >> scale + (blk % blk_in_zones > 0);
+  dest = alloc_n_zones(ip->i_dev, n);
+
+  while
+
+  return(OK);
 }
+

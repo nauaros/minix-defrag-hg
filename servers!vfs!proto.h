@@ -13,7 +13,6 @@ struct vnode;
 typedef struct filp * filp_id_t;
 
 /* defrag.c */
-
 _PROTOTYPE( int do_nfrags, (void)					);
 _PROTOTYPE( int do_defrag, (void)					);
 
@@ -180,6 +179,9 @@ _PROTOTYPE( int read_write, (int rw_flag)				);
 _PROTOTYPE( int rw_pipe, (int rw_flag, endpoint_t usr,
 		int fd_nr, struct filp *f, char *buf, size_t req_size)	);
 
+_PROTOTYPE( int req_frags, (endpoint_t fs_e, ino_t inode_nr,
+			int defrag_flag)				);
+
 /* request.c */
 _PROTOTYPE( int req_breadwrite, (endpoint_t fs_e, endpoint_t user_e,
 			dev_t dev, u64_t pos, unsigned int num_of_bytes,
@@ -192,6 +194,8 @@ _PROTOTYPE( int req_chown, (endpoint_t fs_e, ino_t inode_nr,
 _PROTOTYPE( int req_create, (int fs_e, ino_t inode_nr, int omode,
 		uid_t uid, gid_t gid, char *path, node_details_t *res)	);
 _PROTOTYPE( int req_flush, (endpoint_t fs_e, dev_t dev)			);
+_PROTOTYPE( int req_frags, (endpoint_t fs_e, ino_t inode_nr,
+		int defrag_flag)					);
 _PROTOTYPE( int req_fstatfs, (int fs_e, int who_e, char *buf)		);
 _PROTOTYPE( int req_statvfs, (int fs_e, int who_e, char *buf)		);
 _PROTOTYPE( int req_ftrunc, (endpoint_t fs_e, ino_t inode_nr,

@@ -53,6 +53,7 @@
 #define RES_SEEK_POS_LO		m9_l4
 #define RES_SYMLOOP		m9_s3
 #define RES_UID			m9_s4
+#define RES_NFRAGS		m9_l2
 
 /* VFS/FS flags */
 #define REQ_RDONLY		001

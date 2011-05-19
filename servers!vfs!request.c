@@ -45,7 +45,10 @@ PUBLIC int req_frags(fs_e, inode_nr, defrag_flag)
   m.m_type = REQ_FRAGS;
   m.REQ_INODE_NR = inode_nr;
   m.REQ_DEFRAG_FLAG = defrag_flag;
-  return(fs_sendrec(fs_e, &m));
+
+  r = fs_sendrec(fs_e, &m);
+  if (r != OK) return(r);
+  else return(m.RES_NFRAGS);
 }
 
 /*===========================================================================*
