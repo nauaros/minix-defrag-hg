@@ -5,6 +5,7 @@
  *
  * The entry points into this file are
  *   alloc_bit:       somebody wants to allocate a zone or inode; find one
+ *   alloc_n_bits     find a contiguous block of n zones or inodes to allocate
  *   free_bit:        indicate that a zone or inode is available for allocation
  *   get_super:       search the 'superblock' table for a device
  *   mounted:         tells if file inode is on mounted (or ROOT) file system
@@ -129,6 +130,8 @@ iter:
      chunk and all bits encountered in other chunks. */
   while (b % FS_BITCHUNK_BITS + n - 1 >= FS_BITCHUNK_BITS) {
 
+	printf("non-first chunk: %d\n", b+n);
+
 	/* Allocate bits in current chunk. */
 	k |= (bitchunk_t) ~0 >> FS_BITCHUNK_BITS - i;
 	*wptr = (bitchunk_t) conv2(sp->s_native, (int) k);
@@ -147,8 +150,13 @@ iter:
 	i = FS_BITCHUNK_BITS;
   }
 
+  printf("first chunk: %d\n", b);
+
+  /* Reuse i as the index of the first bit in the first chunk. */
+  i = b % FS_BITCHUNK_BITS;
   /* Allocate bits in the first chunk. */
-  k |= (bitchunk_t) ~0 << b % FS_BITCHUNK_BITS;
+  k |= (bitchunk_t) ~0 << i & (bitchunk_t) ~0 >> FS_BITCHUNK_BITS - n - i;
+  printf("k: %x\n", k);
   *wptr = (bitchunk_t) conv2(sp->s_native, (int) k);
   bp->b_dirt = DIRTY;
   put_block(bp, MAP_BLOCK);
