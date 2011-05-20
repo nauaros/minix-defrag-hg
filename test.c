@@ -2,26 +2,25 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+/**
+ * args[1] is "defrag" or "nfrags"
+ * args[2] is a file path
+ */
 int main(int argv, char const * args[])
 {
-    int arg;
     int nf;
-
-    arg = atoi(args[1]);
-    switch(arg) {
-
-    /* test if nfrags reports the correct number of fragments */
-    case 1:
-        nf = nfrags("/mnt/disk/file6");
+    if (!strcmp(args[1], "nfrags")) {
+        nf = nfrags(args[2]);
         printf("nfrags returned: %d\n", nf);
         if (nf == -1) printf("errno: %d\n", errno);
-        break;
-    case 2:
-        nf = defrag("/mnt/disk/file6");
+    }
+    else if (!strcmp(args[1], "defrag")) {
+        nf = defrag(args[2]);
         printf("defrag returned %d\n", nf);
         if (nf == -1) printf("errno: %d\n", errno);
-        break;
     }
+    else printf("bad argument: %s\n", args[1]);
     return EXIT_SUCCESS;
 }
