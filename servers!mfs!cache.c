@@ -4,11 +4,12 @@
  * cache.
  *
  * The entry points into this file are:
- *   get_block:	  request to fetch a block for reading or writing from cache
- *   put_block:	  return a block previously requested with get_block
- *   alloc_zone:  allocate a new zone (to increase the length of a file)
- *   free_zone:	  release a zone (when a file is removed)
- *   invalidate:  remove all the cache blocks on some device
+ *   get_block:	    request to fetch a block for reading or writing from cache
+ *   put_block:	    return a block previously requested with get_block
+ *   alloc_zone:    allocate a new zone (to increase the length of a file)
+ *   alloc_n_zones: allocate a contiguous block of n zones
+ *   free_zone:	    release a zone (when a file is removed)
+ *   invalidate:    remove all the cache blocks on some device
  *
  * Private functions:
  *   rw_block:    read or write a block from the disk itself

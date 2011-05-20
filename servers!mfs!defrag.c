@@ -70,13 +70,18 @@ PUBLIC int fs_frags(void)
   /* # of zones in the file */
   n = dst_blk >> scale + (dst_blk % blk_in_zone > 0);
 
+  printf("n:%d\n", n);
+
   zone = alloc_n_zones(ip->i_dev, n);	/* number of first zone		*/
+  if (zone == NO_ZONE) return(err_code);
   dst_blk = zone << scale;		/* number of first block	*/
+
+  printf("zone : %d, block : %d\n", zone, dst_blk);
 
   /* Copy all blocks to their new location. */
   for (off = 0; off < ip->i_size ;) {
-	printf("iter copy : %d\n", off);
 	src_blk = read_map(ip, off);
+	printf("copy off:%d, src:%d, dst:%d\n", off, src_blk, dst_blk);
 	buf_src = get_block(ip->i_dev, src_blk, NORMAL);
 	buf_dst = get_block(ip->i_dev, dst_blk, NORMAL);
 	memcpy(buf_dst->b_data, buf_src->b_data, sp->s_block_size);
@@ -108,8 +113,10 @@ PUBLIC int fs_frags(void)
 
   /* Update all inode numbers. */
   for (off = 0 ; off < ip->i_size ; off += zone_size) {
-	printf("iter inode : %d\n", off);
-	write_map(ip, off, zone++, WMAP_FREE); }
+	printf("inode off:%d zone:%d\n", off, zone);
+	write_map(ip, off, 0, WMAP_FREE);
+	write_map(ip, off, zone++, 0);
+  }
 
   return(OK);
 }
