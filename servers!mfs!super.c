@@ -103,7 +103,7 @@ int n;				/* the number of bits to allocate != 0	*/
 		    + i + 1 - n;
 
 		/* String not ok : there are bits beyond the end of the map. */
-		if (b >= map_bits) free_bits = 0;
+		if (b + n > map_bits) free_bits = 0;
 		else break;
 	}
 
